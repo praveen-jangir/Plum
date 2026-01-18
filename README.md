@@ -2,6 +2,9 @@
 
 A FastAPI-based backend service for extracting and classifying financial amounts from medical documents (invoices, receipts, prescriptions).
 
+## 🚀 Live Demo
+[https://plum-eta.vercel.app/docs](https://plum-eta.vercel.app/docs)
+
 ## Features
 
 -   **Extraction**: Identifies monetary values using regex patterns with position tracking.
@@ -26,8 +29,8 @@ The pipeline follows a modular 4-step process:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/plum-amount-detector.git
-cd plum-amount-detector
+git clone https://github.com/praveen-jangir/Plum.git
+cd Plum
 ```
 
 ### 2. Install Dependencies
@@ -96,3 +99,25 @@ bash test_api.sh
 ## Project Structure
 - `main.py`: Core application logic and API routes.
 - `requirements.txt`: Python project dependencies.
+
+## Screenshots
+
+### API Documentation
+![API Docs](https://via.placeholder.com/800x400?text=API+Documentation+Screenshot+Placeholder)
+
+### Sample Output
+```json
+{
+  "final": {
+    "currency": "INR",
+    "amounts": [
+        {
+            "type": "total_bill",
+            "value": 1200,
+            "source": "1,200"
+        }
+    ],
+    "status": "ok"
+  }
+}
+```
