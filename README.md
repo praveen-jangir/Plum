@@ -106,7 +106,7 @@ bash test_api.sh
 ![API Docs](snapshot/docs.png)
 
 ### Sample Output
-![API Output](snapshot/responce.png)
+![API Output](snapshot/responce1.png)
 ```json
 {
   "final": {
