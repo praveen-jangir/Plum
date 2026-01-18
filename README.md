@@ -103,10 +103,10 @@ bash test_api.sh
 ## Screenshots
 
 ### API Documentation
-![API Docs](snapshot/api_docs.png)
+![API Docs](snapshot/docs.png)
 
 ### Sample Output
-![API Output](snapshot/api_output.png)
+![API Output](snapshot/responce.png)
 ```json
 {
   "final": {
