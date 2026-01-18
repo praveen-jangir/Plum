@@ -103,9 +103,10 @@ bash test_api.sh
 ## Screenshots
 
 ### API Documentation
-![API Docs](https://via.placeholder.com/800x400?text=API+Documentation+Screenshot+Placeholder)
+![API Docs](snapshot/api_docs.png)
 
 ### Sample Output
+![API Output](snapshot/api_output.png)
 ```json
 {
   "final": {
