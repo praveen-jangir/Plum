@@ -1,5 +1,10 @@
-fastapi==0.115.0
-uvicorn==0.31.0
-pillow==10.4.0
-pydantic==2.10.3
-pytest==7.4.0
+fastapi
+uvicorn
+openai
+paddleocr
+paddlepaddle
+opencv-python-headless
+python-multipart
+python-dotenv
+requests
+httpx

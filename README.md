@@ -1,124 +1,79 @@
-# Medical Document Amount Detector
+# AI-Powered Health Risk Profiler
 
-A FastAPI-based backend service for extracting and classifying financial amounts from medical documents (invoices, receipts, prescriptions).
-
-## 🚀 Live Demo
-[https://plum-eta.vercel.app/docs](https://plum-eta.vercel.app/docs)
+## Overview
+This service analyzes lifestyle survey responses to generate a structured health risk profile. It uses **PaddleOCR** for extracting text from images and **Mistral-7B** (via Hugging Face API) for intelligent risk assessment and recommendation generation.
 
 ## Features
+- **OCR Implementation**: Extracts text from scanned forms/images.
+- **Factor Extraction**: Identifies key risk factors from unstructured text.
+- **Risk Classification**: Determines Low/Medium/High risk levels.
+- **Recommendations**: Generates actionable health advice.
+- **Guardrails**: Rejects incomplete profiles (>50% missing fields).
 
--   **Extraction**: Identifies monetary values using regex patterns with position tracking.
--   **Normalization**: Converts text (e.g., "1,200", "l200") into standard numeric values.
--   **Classification**: Classifies amounts (Total, Paid, Due, Tax) based on surrounding context mapping.
--   **OCR Support**: Endpoint accepts base64-encoded images (currently uses a mock implementation, ready for Tesseract/PaddleOCR integration).
--   **Validation**: Rule-based guardrails to ensure high-confidence output.
+## Setup
 
-## Architecture
+1. **Create Virtual Environment**
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # Windows: .venv\Scripts\activate
+   ```
 
-The pipeline follows a modular 4-step process:
-1.  **Extract**: Regex-based tokenization capturing value and position.
-2.  **Normalize**: Cleaning and correcting OCR errors (e.g., 'S' -> '5').
-3.  **Classify**: Context-aware mapping using keyword proximity matching.
-4.  **Format**: Structured JSON response with raw source traceability.
+2. **Install Dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## Setup & Installation
+3. **Configure Environment**
+   Create a `.env` file in the root directory and add your Hugging Face API Key:
+   ```env
+   HF_API_KEY=hf_your_key_here
+   ```
 
-### Prerequisites
-- Python 3.8+
-- pip
-
-### 1. Clone the Repository
+## Running the Server
 ```bash
-git clone https://github.com/praveen-jangir/Plum.git
-cd Plum
+uvicorn main:app --reload
 ```
-
-### 2. Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Run the Service
-```bash
-uvicorn main:app --reload --host 0.0.0.0 --port 8080
-```
-The API will be available at `http://localhost:8080`.
+The API will be available at `http://localhost:8000`.
 
 ## API Usage
 
-### Endpoint: `POST /api/detect`
+### 1. Optimize Text/JSON Input
+**Endpoint**: `POST /analyze-json`
 
-#### 1. Analyze Text
-Input:
+**Example Request:**
+```bash
+curl -X POST "http://localhost:8000/analyze-json" \
+     -H "Content-Type: application/json" \
+     -d '{"age": 42, "smoker": "yes", "exercise": "rarely", "diet": "high sugar"}'
+```
+
+**Response:**
 ```json
 {
-  "text": "The Grand Total is Rs. 1,500\nAmount Paid: 500"
+  "status": "ok",
+  "risk_level": "High",
+  "factors": ["Age", "Smoker", "Poor Diet", "Sedentary"],
+  "recommendations": ["Quit smoking", "Consult a nutritionist"],
+  "rationale": "Combination of smoking and high sugar diet..."
 }
 ```
 
-Response:
-```json
-{
-  "step1": { ... },
-  "step2": { ... },
-  "step3": { ... },
-  "final": {
-    "currency": "INR",
-    "amounts": [
-        {
-            "type": "total_bill",
-            "value": 1500,
-            "source": "1,500"
-        },
-        {
-            "type": "paid",
-            "value": 500,
-            "source": "500"
-        }
-    ],
-    "status": "ok"
-  }
-}
+### 2. Optimize Image Input
+**Endpoint**: `POST /analyze-image`
+
+**Example Request:**
+```bash
+curl -X POST "http://localhost:8000/analyze-image" \
+     -F "file=@/path/to/sample_receipt.png"
 ```
 
-#### 2. Analyze Image (Base64)
-Input:
-```json
-{
-  "image": "base64_encoded_string_here..."
-}
-```
+## Architecture
+- **OCR Service**: `ocr_service.py` uses PaddleOCR to convert images to text.
+- **LLM Service**: `llm_service.py` formats prompts and calls the Hugging Face Inference API.
+- **Main API**: `main.py` handles routing, guardrails, and orchestration.
 
 ## Testing
-
-You can use the provided bash script to test the endpoints:
+Run the included test script:
 ```bash
-bash test_api.sh
-```
-
-## Project Structure
-- `main.py`: Core application logic and API routes.
-- `requirements.txt`: Python project dependencies.
-
-## Screenshots
-
-### API Documentation
-![API Docs](snapshot/docs.png)
-
-### Sample Output
-![API Output](snapshot/responce1.png)
-```json
-{
-  "final": {
-    "currency": "INR",
-    "amounts": [
-        {
-            "type": "total_bill",
-            "value": 1200,
-            "source": "1,200"
-        }
-    ],
-    "status": "ok"
-  }
-}
+python test_app.py
 ```
